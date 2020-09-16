@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Board Game</title>
+
+        <style>
+            #canvas {
+                border: 10px solid lightcoral;
+                image-rendering: pixelated;
+                image-rendering: crisp-edges;
+                image-rendering: -moz-crisp-edges;
+                width: 800px;
+                height: 600px;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvas" width="30" height="30"></canvas>
+    </body>
+    <script>
+        const screen = document.getElementById('canvas')
+        const context = screen.getContext('2d')
+        const game = {
+            players: {
+                "p1": {x: 0, y: 0},
+                "p2": {x: 1, y: 0}
+            },
+            cards: [
+                {x: 3, y: 4},
+                {x: 6, y: 3},
+                {x: 1, y: 0},
+            ]
+        }
+        renderElements()
+        function renderElements() {
+            context.fillStyle = "white"
+            context.clearRect(0,0,30,30)
+            for (var i = 0; i < 30; i++) {
+                for (var j = 0; j < 30; j++) {
+                    context.fillStyle = context.fillStyle == "#000000" ? "white" : "black"
+                    context.fillRect(i, j, 1, 1);
+                }
+                context.fillStyle = context.fillStyle == "#000000" ? "white" : "black"
+                context.fillRect(i, j, 1, 1);
+            }
+            for (playerKey in game.players) {
+                    let player = game.players[playerKey]
+                    context.fillStyle = 'green'
+                    context.fillStyle = 'pink'
+                    context.fillRect(player.x, player.y, 1, 1)
+            }
+            game.cards.forEach(card => {
+                context.fillStyle = 'pink'
+                context.fillRect(card.x, card.y, 1, 1)
+            })
+            // requestAnimationFrame(renderElements)
+        }
+    </script>
+</html>
