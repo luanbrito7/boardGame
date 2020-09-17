@@ -5,32 +5,81 @@
 
         <style>
             #canvas {
-                border: 10px solid lightcoral;
+                border: 2px solid lightcoral;
                 image-rendering: pixelated;
                 image-rendering: crisp-edges;
                 image-rendering: -moz-crisp-edges;
                 width: 800px;
                 height: 600px;
             }
+            .header {
+                width: 804px;
+                background-color: lightskyblue;
+                display: flex;
+                justify-content: center;
+                padding-top: 25px;
+                padding-bottom: 25px;
+            }
+            .button {
+                width: 60px;
+                height: 60px;
+            }
         </style>
     </head>
     <body>
+        <div class="header">
+            <button onclick="rollDice()" class="button">
+                <p>2</p>
+            </button>
+        </div>
         <canvas id="canvas" width="30" height="30"></canvas>
     </body>
     <script>
         const screen = document.getElementById('canvas')
         const context = screen.getContext('2d')
-        const game = {
-            players: {
-                "p1": {x: 0, y: 0},
-                "p2": {x: 1, y: 0}
-            },
-            cards: [
-                {x: 3, y: 4},
-                {x: 6, y: 3},
-                {x: 1, y: 0},
-            ]
-        }
+        function gameFactory() {
+            let state = {
+                players: {
+                    "p1": {x: 0, y: 0},
+                    "p2": {x: 1, y: 0}
+                },
+                cards: [
+                    {x: 3, y: 4},
+                    {x: 6, y: 3},
+                    {x: 1, y: 0},
+                ]
+            }
+
+            function movePlayer(command) {
+                let player = state.players[command.playerId]
+                if (isVictorious(player, command)) {
+                    alert(`player ${command.playerId} won.`)
+                } else {
+                    if (player.x + command.diceValue > 30) {
+                        player.x = (command.diceValue + player.x) % 30
+                        player.y += 1
+                    } else {
+                        player.x += command.diceValue
+                    }
+                }
+            }
+
+            function isVictorious(player, command) {
+                if (player.x + command.diceValue > 30) {
+                    if (player.y + 1 > 30) {
+                        return true
+                    }
+                }
+                return false
+            }
+            
+            return {
+                state,
+                movePlayer
+            }
+        }  
+        const game = gameFactory()
+        //game.movePlayer({playerId: "p1", diceValue: 5})
         renderElements()
         function renderElements() {
             context.fillStyle = "white"
@@ -43,17 +92,21 @@
                 context.fillStyle = context.fillStyle == "#000000" ? "white" : "black"
                 context.fillRect(i, j, 1, 1);
             }
-            for (playerKey in game.players) {
-                    let player = game.players[playerKey]
+            for (playerKey in game.state.players) {
+                    let player = game.state.players[playerKey]
                     context.fillStyle = 'green'
                     context.fillStyle = 'pink'
                     context.fillRect(player.x, player.y, 1, 1)
             }
-            game.cards.forEach(card => {
+            game.state.cards.forEach(card => {
                 context.fillStyle = 'pink'
                 context.fillRect(card.x, card.y, 1, 1)
             })
-            // requestAnimationFrame(renderElements)
+            requestAnimationFrame(renderElements)
         }
+
+        // function rollDice() {
+        //     console.log("rolling")
+        // }
     </script>
 </html>
