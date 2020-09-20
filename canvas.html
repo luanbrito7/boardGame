@@ -34,12 +34,12 @@
             <button onclick="inputListener.rollDice()" class="button">
                 <p>2</p>
             </button>
-            <form>
+            <form onsubmit="return false">
                 <label for="name">Player name:</label><br>
                 <input type="text" id="target" name="playerTarget" value="">
             </form>
         </div>
-        <canvas id="canvas" width="30" height="30"></canvas>
+        <canvas id="canvas" width="12" height="12"></canvas>
     </body>
     <script>
         const screen = document.getElementById('canvas')
@@ -59,6 +59,10 @@
                 ]
             }
 
+            function fillCards() {
+                
+            }
+
             function inputPlayer(command) {
                 console.log(command)
                 const acceptedInputs = {
@@ -67,8 +71,8 @@
                         if (isVictorious(player, diceValue)) {
                             alert(`player ${player.name} won.`)
                         } else {
-                            if (player.x + diceValue > 30) {
-                                player.x = (diceValue + player.x) % 30
+                            if (player.x + diceValue > 12) {
+                                player.x = (diceValue + player.x) % 12
                                 player.y += 1
                             } else {
                                 player.x += diceValue
@@ -76,8 +80,8 @@
                         }
                         return null
                         function isVictorious(player, diceValue) {
-                            if (player.x + diceValue > 30) {
-                                if (player.y + 1 > 30) {
+                            if (player.x + diceValue > 12) {
+                                if (player.y + 1 > 12) {
                                     return true
                                 }
                             }
@@ -149,9 +153,9 @@
         renderElements()
         function renderElements() {
             context.fillStyle = "white"
-            context.clearRect(0,0,30,30)
-            for (var i = 0; i < 30; i++) {
-                for (var j = 0; j < 30; j++) {
+            context.clearRect(0,0,12,12)
+            for (var i = 0; i < 12; i++) {
+                for (var j = 0; j < 12; j++) {
                     context.fillStyle = context.fillStyle == "#000000" ? "white" : "black"
                     context.fillRect(i, j, 1, 1);
                 }
