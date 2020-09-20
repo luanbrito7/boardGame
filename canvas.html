@@ -60,20 +60,20 @@
                 let cards = []
                 for (let i = 1; i < numberOfCards; i++) {
                     let card = {
-                        x: getRandomInt(0,12),
-                        y: getRandomInt(0,12),
+                        x: getRandomInt(0,11),
+                        y: getRandomInt(0,11),
                         value: getRandomInt(0,6)
                     }
                     while (!allowedPosition(card)) {
-                        card.x = getRandomInt(0,12)
-                        card.y = getRandomInt(0,12)
+                        card.x = getRandomInt(0,11)
+                        card.y = getRandomInt(0,11)
                     }
                     cards.push(card)
                 }
                 return cards
 
                 function allowedPosition(card) {
-                    if ((card.x == 0 && card.y == 0) || (card.x == 12 && card.y == 12)) {
+                    if ((card.x == 0 && card.y == 0) || (card.x == 11 && card.y == 11)) {
                         return false
                     } else {
                         return true
@@ -86,11 +86,12 @@
                 const acceptedInputs = {
                     rollDice(player) {
                         let diceValue = getRandomInt(1,6)
+                        console.log(player, diceValue)
                         if (isVictorious(player, diceValue)) {
                             alert(`player ${player.name} won.`)
                         } else {
-                            if (player.x + diceValue > 12) {
-                                player.x = (diceValue + player.x) % 12
+                            if (player.x + diceValue > 11) {
+                                player.x = (diceValue + player.x) % 11
                                 player.y += 1
                             } else {
                                 player.x += diceValue
@@ -98,16 +99,30 @@
                         }
                         return null
                         function isVictorious(player, diceValue) {
-                            if (player.x + diceValue > 12) {
-                                if (player.y + 1 > 12) {
+                            if (player.x + diceValue >= 11) {
+                                if (player.y + 1 > 11) {
                                     return true
                                 }
                             }
                             return false
                         }
                     },
-                    attack(player) {
+                    attack(command) {
 
+                    },
+                    selectCard(player) {
+                        let selectedCard = cards.filter((card) => (card.x == player.x && card.y == player.y))
+                        if (selectedCard)
+                        if (player.x - input < 0) {
+                            player.y = Math.max(0, player.y - 1)
+                            if (player.y == 0) {
+                                player.x = 0
+                            } else {
+                                player.x = 11 - (input - player.x)
+                            }
+                        } else {
+                            player.x = Math.min(player.x - input, 0)
+                        }
                     }
                 }
 
@@ -164,6 +179,13 @@
                 notifyAll(command)
             }
 
+            function selectCard() {
+                let command = {
+                    playerId: 'p1',
+                    input: 'selectCard'
+                }
+            }
+
             return {
                 subscribe,
                 rollDice
@@ -172,7 +194,7 @@
         renderElements()
         function renderElements() {
             context.fillStyle = "white"
-            context.clearRect(0,0,12,12)
+            context.clearRect(0,0,11,11)
             for (var i = 0; i < 12; i++) {
                 for (var j = 0; j < 12; j++) {
                     context.fillStyle = context.fillStyle == "#000000" ? "white" : "black"
