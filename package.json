@@ -1,0 +1,24 @@
+{
+  "name": "multiplayer",
+  "version": "1.0.0",
+  "description": "A simple board multiplayer game",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luanbrito7/boardGame.git"
+  },
+  "author": "Luan Brito",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/luanbrito7/boardGame/issues"
+  },
+  "homepage": "https://github.com/luanbrito7/boardGame#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  }
+}
