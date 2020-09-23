@@ -31,7 +31,7 @@
     </head>
     <body>
         <div class="header">
-            <button onclick="inputListener.rollDice()" class="button">
+            <button id="button" class="button">
                 <p>2</p>
             </button>
             <form onsubmit="return false">
@@ -41,80 +41,41 @@
         </div>
         <canvas id="canvas" width="12" height="12"></canvas>
     </body>
-    <script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module">
+        import gameFactory from './gameFactory.js'
+        import inputListenerFactory from './inputListener.js'
+        import renderElements from './render.js'
+
         const screen = document.getElementById('canvas')
         console.log(screen.screenX, screen.screenY)
-        const context = screen.getContext('2d')
-        let selfId = "p1"
-        const game = gameFactory()
+        let context = screen.getContext('2d')
         let inputListener = inputListenerFactory()
-        inputListener.subscribe(game.inputPlayer) 
-        function inputListenerFactory() {
-            let observers = []
+        const socket = io()
+        let game = gameFactory();
+        socket.on('connect', () => {
+            inputListener.setPlayer(socket.id)
+            renderElements(context, game, requestAnimationFrame)
+        })
+        socket.on('gameState', (state) => {
+            game.setState(state)
 
-            function subscribe(observerFunction) {
-                observers.push(observerFunction)
-            }
+            inputListener.subscribe(game.inputPlayer)
+            inputListener.subscribe((command) => {
+                socket.emit('move-player', command)
+            })
+        })
 
-            function notifyAll(command) {
-                observers.forEach((observerFunction) => {
-                    observerFunction(command)
-                })
-            }
-
-            document.addEventListener("keydown", (event) => {
-                let keyPressed = event.key
-                console.log(keyPressed)
-                let command = {
-                    playerId: 'p1',
-                    input: keyPressed
-                }
-                notifyAll(command)
+        socket.on('remove-player', (command) => {
+                console.log(`Receiving ${command.type} -> ${command.playerName}`)
+                game.removePlayer(command)
             })
 
-            function rollDice() {
-                let command = {
-                    playerId: 'p1',
-                    input: 'rollDice'
-                }
-                notifyAll(command)
-            }
+        socket.on('move-player', (command) => {
+            console.log(`Receiving ${command.type} -> ${command.playerName}`)
 
-            function selectCard() {
-                let command = {
-                    playerId: 'p1',
-                    input: 'selectCard'
-                }
-            }
-
-            return {
-                subscribe,
-                rollDice
-            }
-        }
-        renderElements()
-        function renderElements() {
-            context.fillStyle = "white"
-            context.clearRect(0,0,11,11)
-            for (var i = 0; i < 12; i++) {
-                for (var j = 0; j < 12; j++) {
-                    context.fillStyle = context.fillStyle == "#000000" ? "white" : "black"
-                    context.fillRect(i, j, 1, 1);
-                }
-                context.fillStyle = context.fillStyle == "#000000" ? "white" : "black"
-                context.fillRect(i, j, 1, 1);
-            }
-            for (playerKey in game.state.players) {
-                    let player = game.state.players[playerKey]
-                    context.fillStyle = 'green'
-                    context.fillStyle = 'pink'
-                    context.fillRect(player.x, player.y, 1, 1)
-            }
-            game.state.cards.forEach(card => {
-                context.fillStyle = 'pink'
-                context.fillRect(card.x, card.y, 1, 1)
-            })
-            requestAnimationFrame(renderElements)
-        }
+            game.movePlayer(command)
+        })
+        document.querySelector('#button').addEventListener('click', inputListener.rollDice)
     </script>
 </html>
