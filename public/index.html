@@ -32,7 +32,7 @@
     <body>
         <div class="header">
             <button id="button" class="button">
-                <p>2</p>
+                <p id="dice">0</p>
             </button>
             <form onsubmit="return false">
                 <label for="name">Player name:</label><br>
@@ -76,7 +76,7 @@
 
         socket.on('move-player', (command) => {
             console.log(`Receiving ${command.type} -> ${command.playerName}`)
-
+            document.getElementById("dice").innerHTML = command.value
             game.movePlayer(command)
         })
         document.querySelector('#button').addEventListener('click', inputListener.rollDice)
