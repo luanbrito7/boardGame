@@ -86,16 +86,16 @@ export default function serverGame() {
             }
         })
         if (selectedCard) {
-            if (player.x - selectedCard.value < 0) {
-                player.y = Math.max(0, player.y - 1)
-                if (player.y == 0) {
-                    player.x = 0
-                } else {
-                    player.x = 11 - (selectedCard.value - player.x)
-                }
-            } else {
-                player.x = Math.min(player.x - selectedCard.value, 0)
-            }
+            // if (player.x - selectedCard.value < 0) {
+            //     player.y = Math.max(0, player.y - 1)
+            //     if (player.y == 0) {
+            //         player.x = 0
+            //     } else {
+            //         player.x = 11 - (selectedCard.value - player.x)
+            //     }
+            // } else {
+            //     player.x = Math.min(player.x - selectedCard.value, 0)
+            // }
             removeCard({
                 index: cardIndex
             })
@@ -106,12 +106,6 @@ export default function serverGame() {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min)) + min;
-    }
-
-    function nextRound() {
-        if (state.turnPlayerIndex >= state.playerOrder.length - 1) {
-            state.turnPlayerIndex = 0
-        }
     }
 
     function isPlayerTurn(command) {
@@ -130,7 +124,6 @@ export default function serverGame() {
         notifyAll,
         generateCards,
         setState,
-        inputPlayerServer,
-        nextRound
+        inputPlayerServer
     }
 }

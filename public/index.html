@@ -79,6 +79,11 @@
             document.getElementById("dice").innerHTML = command.value
             game.movePlayer(command)
         })
+
+        socket.on('remove-card', (command) => {
+            console.log(`Receiving ${command.type} -> ${command.index}`)
+            game.removeCard(command)
+        })
         document.querySelector('#button').addEventListener('click', inputListener.rollDice)
     </script>
 </html>

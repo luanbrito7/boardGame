@@ -69,6 +69,15 @@ export default function gameFactory() {
             playerName: player.playerName,
             value: diceValue
         })
+        nextRound()
+    }
+
+    function nextRound() {
+        if (state.turnPlayerIndex >= state.playerOrder.length - 1) {
+            state.turnPlayerIndex = 0
+        } else {
+            state.turnPlayerIndex += 1
+        }
     }
 
     // function inputPlayerClient(command) {
