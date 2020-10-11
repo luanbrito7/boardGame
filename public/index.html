@@ -79,6 +79,10 @@
 
             game.movePlayer(command)
         })
+
+        socket.on('next-round', (command) => {
+            game.nextRound(command)
+        })
         document.querySelector('#button').addEventListener('click', inputListener.rollDice)
     </script>
 </html>

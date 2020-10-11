@@ -71,6 +71,17 @@ export default function gameFactory() {
         })
     }
 
+    function nextRound() {
+        if (state.turnPlayerIndex >= state.playerOrder.length - 1) {
+            state.turnPlayerIndex = 0
+        } else {
+            state.turnPlayerIndex += 1
+        }
+        notifyAll({
+            type: "next-round"
+        })
+    }
+
     // function inputPlayerClient(command) {
     // }
     
@@ -81,6 +92,7 @@ export default function gameFactory() {
         removePlayer,
         movePlayer,
         removeCard,
+        nextRound,
         subscribe,
         notifyAll
     }

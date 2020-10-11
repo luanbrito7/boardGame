@@ -7,6 +7,7 @@ const {
     movePlayer,
     removePlayer,
     removeCard,
+    nextRound,
     subscribe,
     notifyAll
 } = gameFactory()
@@ -51,6 +52,7 @@ export default function serverGame() {
                         playerName: player.playerName,
                         value: diceValue
                     })
+                    nextRound()
                 }
                 checkCard(player)
                 return null
@@ -106,12 +108,6 @@ export default function serverGame() {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min)) + min;
-    }
-
-    function nextRound() {
-        if (state.turnPlayerIndex >= state.playerOrder.length - 1) {
-            state.turnPlayerIndex = 0
-        }
     }
 
     function isPlayerTurn(command) {
