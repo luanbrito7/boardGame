@@ -1,6 +1,6 @@
 import express from 'express'
 import http from 'http'
-import gameFactory from './public/gameFactory.js'
+import serverGame from './serverGame.js'
 import socketio from 'socket.io'
 
 const app = express()
@@ -9,7 +9,7 @@ const sockets = socketio(server)
 
 app.use(express.static('public'))
 
-let game = gameFactory()
+let game = serverGame()
 
 game.state.cards = game.generateCards()
 
@@ -27,10 +27,11 @@ sockets.on("connection", (socket) => {
 
     socket.emit('gameState', game.state)
 
-    socket.on("move-player", (command) => {
+    socket.on("roll-dice", (command) => {
+        console.log(`receive roll_dice ${command.playerName}`)
         command.playerName = socket.id
-        command.type = 'move-player' 
-        game.inputPlayer(command)
+        command.input = 'rollDice' 
+        game.inputPlayerServer(command)
     })
 
     socket.on("disconnect", () => {

@@ -2,8 +2,9 @@ export default function inputListenerFactory() {
     let observers = []
     let playerName;
 
-    function setPlayer(playerName) {
-        playerName = playerName
+    function setPlayer(name) {
+        playerName = name
+        console.log(playerName)
     }
 
     function subscribe(observerFunction) {
@@ -28,7 +29,7 @@ export default function inputListenerFactory() {
     function rollDice() {
         let command = {
             playerName: playerName,
-            input: 'rollDice'
+            input: 'roll-dice'
         }
         notifyAll(command)
     }
@@ -43,6 +44,7 @@ export default function inputListenerFactory() {
     return {
         subscribe,
         rollDice,
-        setPlayer
+        setPlayer,
+        playerName
     }
 }
